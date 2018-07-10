@@ -1,1 +1,96 @@
-﻿teste 1111
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Controle de Horários</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body id="teste">
+    <select name="" id="tamanho" style="width: 100px;">
+        <option selected value="00">0</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+    </select>
+
+
+    
+    <select data-bind="value: progresso" name="" id="">
+        <option value="00">0</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+    </select><br>
+    <progress data-bind="value: progresso2" value=0 max=100></progress><br>
+    <progress data-bind="value: progresso1" value=0 max=100></progress><br>
+    <progress data-bind="value: progresso" value=0 max=100></progress><br>
+    <progress data-bind="value: progresso1" value=0 max=100></progress><br>
+    <progress data-bind="value: progresso2" value=0 max=100></progress><br>
+    <br>
+    <span id="tamanhoSpan"></span>
+    <br>
+    <select name="" id="" data-bind="options: $root.itens"></select>
+    <select name="" id="" data-bind="options: $root.vetor, optionsText: 'nome',
+     optionsCaption: 'Selecione um Nome', value: selecionado"></select>
+    <br>
+  
+    
+    <br><br>
+    <a href="teste.html">Teste</a><br><br><br>
+
+
+
+    <button data-bind="click: funcaolegal">CLIQUE!!!!</button>
+
+
+
+    
+    <select name="" id="valor_barra">
+        <option value="00">0</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+    </select>
+
+    <div progress=0 id="barra_de_progresso">
+        <div>
+            
+        </div>
+    </div>
+
+
+
+
+
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="scripts/knockout-3.4.2.js"></script>
+    <script src="scripts/script.js" type="text/javascript"></script>
+</body>
+
+</html>

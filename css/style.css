@@ -1,0 +1,16 @@
+progress{
+    transition: width 1s;
+}
+#barra_de_progresso{
+    width: 800px;
+    height: 25px;
+    border: 2px solid red;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#barra_de_progresso > div{
+    width: 0%;
+    height: 25px;
+    transition: width 2s;
+    background: blue;
+}
