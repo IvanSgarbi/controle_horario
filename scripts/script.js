@@ -10,13 +10,12 @@ $(document).ready(function () {
     $("#valor_barra").change(function () {
         $("#barra_de_progresso > div").css("width",this.value+"%");   
     });
-    
 });
 
 function budega() {
     var pessoa = function (nome,classe) {
         this.nome = nome;
-        this.classe = classe;     
+        this.classe = classe;
     }
     this.firstName = ko.observable("Bert");
     this.lastName = ko.observable("Bertingtons");
@@ -43,8 +42,6 @@ function budega() {
     ]);
     this.funcaolegal = function(){
         alert(this.selecionado().nome + this.selecionado().classe);
-
-
     }
 
 }
