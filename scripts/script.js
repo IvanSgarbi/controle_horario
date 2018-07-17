@@ -14,7 +14,6 @@ function atualizar(horario) {
     if(chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != ""){
         
         
-        //calculo = 
         resultado_dia.innerHTML = chegada+", "+almoco_ida+", "+almoco_volta+", "+saida;
         $("#resultado").html("No turno da manhã você Trabalhou "+ diferenca(chegada,almoco_ida)+" horas.<br>"+
         "E no turno da tarde você trabalhou "+ diferenca(almoco_volta,saida)+" horas.<br>"+
