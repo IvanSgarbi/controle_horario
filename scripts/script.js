@@ -16,7 +16,9 @@ function atualizar(horario) {
         
         //calculo = 
         resultado_dia.innerHTML = chegada+", "+almoco_ida+", "+almoco_volta+", "+saida;
-        alert("No turno da manhã você Trabalhou "+ diferenca(chegada,almoco_ida));
+        $("#resultado").html("No turno da manhã você Trabalhou "+ diferenca(chegada,almoco_ida)+" horas.<br>"+
+        "E no turno da tarde você trabalhou "+ diferenca(almoco_volta,saida)+" horas.<br>"+
+        "Um total de "+soma(diferenca(chegada,almoco_ida),diferenca(almoco_volta,saida))+" horas");
     }
 
 }
@@ -32,10 +34,35 @@ function diferenca(hora1,hora2){
         minutos = 60 -(minutos*-1);
         horas --;
     }
+    if(minutos<10){
+        minutos = "0"+minutos;
+    }
+    if(horas<10){
+        horas = "0"+horas;
+    }
     resultado = horas+":"+minutos;
     return resultado;
-
-
+}
+function soma(hora1,hora2){
+    var resultado;
+    var horas=0;
+    var minutos=0;
+    hora1 = hora1.split(":");
+    hora2 = hora2.split(":");
+    horas = hora1[0]*1 + hora2[0]*1;
+    minutos = hora1[1]*1 + hora2[1]*1;
+    if(minutos>59){
+        minutos -= 60;
+        horas++;
+    }
+    if(minutos<10){
+        minutos = "0"+minutos;
+    }
+    if(horas<10){
+        horas = "0"+horas;
+    }
+    resultado = horas+":"+minutos;
+    return resultado;
 }
 
 //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
