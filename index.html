@@ -4,22 +4,35 @@
     <meta charset="UTF-8">
     <title>CONTROLE DE HORÁRIOS</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="scripts/jquery-3.3.1.min.js"></script>,
     <script src="scripts/script.js"></script>
 </head>
 <body>
-    <table>
+    <table align=center>
         <tr>
-            <td>
-                <input type="time" name="" class="chegada">
-                <input type="time" name="" class="intervalo_ida">
-                <input type="time" name="" class="intervalo_volta">
-                <input type="time" name="" class="saida">
-                Total de horas no dia:<span></span>
+            <td align=center>
+                Selecione o ano:
+                <input type="number" maxlength="4" name="" id="ano_selecionado">
+                Selecione o mês:
+                <select id=mes_selecionado>
+                    <option selected value="0">Janeiro</option>
+                    <option value="1">Fevereiro</option>
+                    <option value="2">Março</option>
+                    <option value="3">Abril</option>
+                    <option value="4">Maio</option>
+                    <option value="5">Junho</option>
+                    <option value="6">Julho</option>
+                    <option value="7">Agosto</option>
+                    <option value="8">Setembro</option>
+                    <option value="9">Outubro</option>
+                    <option value="10">Novembro</option>
+                    <option value="11">Desembro</option>
+                </select>
             </td>
         </tr>
-        
     </table>
-    <span id="resultado"></span>
+    <mes>
+
+    </mes>
 </body>
 </html>
