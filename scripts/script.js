@@ -1,12 +1,22 @@
 $(document).ready(function () {
-    gerar_form(0);
+    var dia_atual;
+    dia_atual = new Date();
+    gerar_form(dia_atual.getMonth());
+    $("#mes_selecionado").val(dia_atual.getMonth());
+    $("#ano_selecionado").val(dia_atual.getFullYear());
     $("input[type='time']").change(function () {
         atualizar(this.parentElement.children);
     });
-    $("select").change(function () {
+    $("#mes_selecionado").change(function () {
         gerar_form(this.value);
     });
-    
+    document.getElementById("ano_selecionado").onkeyup = function () {
+        var ano = $("#ano_selecionado").val();
+        var mes = $("#mes_selecionado").val();
+        if (ano.length > 3) {
+            gerar_form(mes);
+        }
+    }    
 });
 function atualizar(horario) {
     var chegada = horario[0].value;
@@ -17,11 +27,10 @@ function atualizar(horario) {
     var calculo;
     if (chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") {
         var resultado = "Manhã: " + diferenca(chegada, almoco_ida) + " horas. " +
-        "Tarde: " + diferenca(almoco_volta, saida) + " horas. " +
-        "Total:" + soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida)) + " horas"
+            "Tarde: " + diferenca(almoco_volta, saida) + " horas. " +
+            "Total:" + soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida)) + " horas"
         $(resultado_dia).text(resultado);
     }
-
 }
 function diferenca(hora1, hora2) {
     var resultado;
@@ -73,9 +82,14 @@ function dias_no_mes(mes_num) {
             mes_dias = ["Janeiro", 31];
             break;
         case 1:
-            mes_dias = ["Fevereiro", 28];
+            if ($("#ano_selecionado").val() % 4 == 0) {
+                mes_dias = ["Fevereiro", 29];
+            } else {
+                mes_dias = ["Fevereiro", 28];
+            }
             break;
         case 2:
+
             mes_dias = ["Março", 31];
             break;
         case 3:
@@ -111,29 +125,29 @@ function dias_no_mes(mes_num) {
     }
     return mes_dias;
 }
-function gerar_form(mes){
+function gerar_form(mes) {
     var html = "<table>";
     var dias = dias_no_mes(mes);
     dias = dias[1];
     var cont;
     for (cont = 1; cont <= dias; cont++) {
         html +=
-        "<tr>"+
-            "<td>"+
-                "Dia "+cont+
-            ":</td>"+
-            "<td>"+
-                "<input type=time>"+
-                "<input type=time>"+
-                "<input type=time>"+
-                "<input type=time>"+
-            "</td>"+
-            "<td>"+
-            "</td>"+
-        "</tr>";
+            "<tr>" +
+            "<td>" +
+            "Dia " + cont +
+            ":</td>" +
+            "<td>" +
+            "<input type=time>" +
+            "<input type=time>" +
+            "<input type=time>" +
+            "<input type=time>" +
+            "</td>" +
+            "<td>" +
+            "</td>" +
+            "</tr>";
     }
     html += "</table>";
     $("mes").html(html);
-    
-}   
+
+}
 //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
