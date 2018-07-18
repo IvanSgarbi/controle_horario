@@ -4,7 +4,11 @@ $(document).ready(function () {
     gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
+    triggers();
+});
+function triggers() {
     $("input[type='time']").change(function () {
+
         atualizar(this.parentElement.children);
     });
     $("#mes_selecionado").change(function () {
@@ -16,15 +20,14 @@ $(document).ready(function () {
         if (ano.length > 3) {
             gerar_form(mes);
         }
-    }    
-});
+    }
+}
 function atualizar(horario) {
     var chegada = horario[0].value;
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
     var resultado_dia = horario[0].parentElement.parentElement.children[2];
-    var calculo;
     if (chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") {
         var resultado = "Manhã: " + diferenca(chegada, almoco_ida) + " horas. " +
             "Tarde: " + diferenca(almoco_volta, saida) + " horas. " +
@@ -89,7 +92,6 @@ function dias_no_mes(mes_num) {
             }
             break;
         case 2:
-
             mes_dias = ["Março", 31];
             break;
         case 3:
@@ -126,15 +128,21 @@ function dias_no_mes(mes_num) {
     return mes_dias;
 }
 function gerar_form(mes) {
-    var html = "<table>";
+    var ano = $("#ano_selecionado").val();
+    var dias_semana_extenso =
+        ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira",
+            "Quinta-Feira", "Sexta-Feira", "Sábado"];
+    var dia_semana = new Date(ano, mes, 1);
+    dia_semana = dia_semana.getDay();
     var dias = dias_no_mes(mes);
     dias = dias[1];
     var cont;
+    var html = "<table>";
     for (cont = 1; cont <= dias; cont++) {
         html +=
             "<tr>" +
             "<td>" +
-            "Dia " + cont +
+            dias_semana_extenso[dia_semana] + " " + cont +
             ":</td>" +
             "<td>" +
             "<input type=time>" +
@@ -145,9 +153,14 @@ function gerar_form(mes) {
             "<td>" +
             "</td>" +
             "</tr>";
+        dia_semana++;
+        if (dia_semana > 6) {
+            dia_semana = 0;
+        }
     }
     html += "</table>";
     $("mes").html(html);
+    triggers();
 
 }
 //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);

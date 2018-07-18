@@ -4,14 +4,15 @@ body{
     font-size: 14px;
 }
 td:nth-child(3){
-    width: 375px;
+    width: 400px;
+    background: blue;
 }
 span{
     display: block;
     width:70px;
 }
 table{
-    width: 750px;
+    width: 850px;
     background: #000000;
     border: 1px solid black;
     border-radius: 5px;
