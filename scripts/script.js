@@ -21,6 +21,10 @@ function triggers() {
             gerar_form(mes);
         }
     }
+    $("mes table tr").click(function () {
+        var dia_semana = this.getAttribute("dia-semana");
+        selecionar(this,dia_semana);
+    });
 }
 function atualizar(horario) {
     var chegada = horario[0].value;
@@ -34,6 +38,36 @@ function atualizar(horario) {
             "Total:" + soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida)) + " horas"
         $(resultado_dia).text(resultado);
     }
+}
+function selecionar(tr,dia_semana) {
+    var dia_atual = tr.getAttribute("dia");
+    var inicio_semana;
+    var dias_selecionados = [];
+    var cont = 0;
+    inicio_semana = dia_atual - dia_semana;
+
+    $("tr").each(function(index,elemento) {
+        var dia = elemento.getAttribute("dia");
+        if(dia >= inicio_semana && dia <=inicio_semana+6 && dia > 0){
+            dias_selecionados[cont] = elemento;
+            cont++;
+            //dias_selecionados.push(elemento);
+        }
+    });
+    cont=0;
+    $("tr").each(function(index,elemento){
+        elemento.setAttribute("style","background: black");
+    });
+    for (cont = 0; cont < dias_selecionados.length; cont++) {
+        dias_selecionados[cont].setAttribute("style","background: blue");
+    }
+    tr.setAttribute("style","background: #FFFF00");
+    
+    relatorio(tr,dias_selecionados);
+}
+function relatorio(dia,semana) {
+    
+    return;
 }
 function diferenca(hora1, hora2) {
     var resultado;
@@ -140,7 +174,7 @@ function gerar_form(mes) {
     var html = "<table>";
     for (cont = 1; cont <= dias; cont++) {
         html +=
-            "<tr>" +
+            "<tr dia="+cont+" dia-semana="+dia_semana+">"+
             "<td>" +
             dias_semana_extenso[dia_semana] + " " + cont +
             ":</td>" +
