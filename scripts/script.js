@@ -8,8 +8,10 @@ $(document).ready(function () {
 });
 function triggers() {
     $("input[type='time']").change(function () {
-
+        var tr = this.parentElement.parentElement;
         atualizar(this.parentElement.children);
+
+        selecionar(tr);
     });
     $("#mes_selecionado").change(function () {
         gerar_form(this.value);
@@ -22,8 +24,7 @@ function triggers() {
         }
     }
     $("mes table tr").click(function () {
-        var dia_semana = this.getAttribute("dia-semana");
-        selecionar(this,dia_semana);
+        selecionar(this);
     });
 }
 function atualizar(horario) {
@@ -39,11 +40,12 @@ function atualizar(horario) {
         $(resultado_dia).text(resultado);
     }
 }
-function selecionar(tr,dia_semana) {
+function selecionar(tr) {
     var dia_atual = tr.getAttribute("dia");
     var inicio_semana;
     var dias_selecionados = [];
     var cont = 0;
+    dia_semana = tr.getAttribute("dia-semana");
     inicio_semana = dia_atual - dia_semana;
 
     $("tr").each(function(index,elemento) {
@@ -66,8 +68,46 @@ function selecionar(tr,dia_semana) {
     relatorio(tr,dias_selecionados);
 }
 function relatorio(dia,semana) {
+    var horario = dia.children[1].children;
+    var chegada = horario[0].value;
+    var almoco_ida = horario[1].value;
+    var almoco_volta = horario[2].value;
+    var saida = horario[3].value;
+    var turno_tarde;
+    var sair;
+    var limite_manha;
+    var limite_tarde;
+    var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0];
+    var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0];
+    if(chegada == "" || almoco_ida == "" || almoco_volta == ""){
+        resultado_dia.innerHTML = "";
+        return;
+    }
+    var turno_manha = diferenca(chegada,almoco_ida);
+    if(saida != ""){
+        turno_tarde = diferenca(almoco_volta,saida);
+
+
+        resultado_dia.innerHTML = "Seu turno da tarde foi de "+ turno_tarde;
+    }else{
+        sair = soma(almoco_volta,diferenca(turno_manha,"08:48"));
+        quanto_falta(sair);
+        resultado_dia.innerHTML = "Você pode sair as " + sair;
+    }
     
-    return;
+    
+    
+}
+function quanto_falta(sair){
+    var agora = new Date();
+    var porcentagem;
+    agora = agora.getHours() * agora.getMinutes();
+    sair = sair.split(":");
+    sair = parseInt(sair[0]) * parseInt(sair[1]);
+    porcentagem = (agora*100)/sair;
+    if(porcentagem > 100){
+        porcentagem = 100;
+    }
 }
 function diferenca(hora1, hora2) {
     var resultado;
