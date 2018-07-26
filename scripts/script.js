@@ -80,27 +80,43 @@ function relatorio(dia,semana) {
     var sair_hoje;
     var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0];
     var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0];
-    if(chegada == "" || almoco_ida == "" || almoco_volta == ""){
-        resultado_dia.innerHTML = "";
-        return;
-    }
     var turno_manha = diferenca(chegada,almoco_ida);
-    if(saida != ""){
+    if(almoco_volta != "" && chegada != "" && saida != "" && almoco_ida != ""){
+
         turno_tarde = diferenca(almoco_volta,saida);
         resultado_dia.innerHTML = "Seu turno da tarde foi de "+ turno_tarde;
-    }else{
+
+    }else if(chegada != "" && almoco_ida != "" && almoco_volta != ""){
+
         sair = soma(almoco_volta,diferenca(turno_manha,"08:48"));
         sair_hoje = quanto_falta(sair,almoco_volta);
         resultado_dia.innerHTML = "Você pode sair as " + sair +"<br>E faltam "+sair_hoje[1]+
         " para vc poder sair<br>"+
-        "<progress value="+sair_hoje[0]+" max=100></progress>"+sair_hoje[0]+"%";
+        "<progress value="+sair_hoje[0]+" max=100></progress><br>Você já fez "+sair_hoje[0]+
+        "% do seu turno da tarde";
+
+    }else if(almoco_ida != "" && chegada != ""){
+        
+
+
+    }else if(chegada != ""){
+        var agora = new Date();
+        agora = agora.getHours()+":"+agora.getMinutes();
+        var max_almoco = soma(chegada,"06:00");
+        var falta_max_almoco = diferenca(agora,max_almoco);
+        resultado_dia.innerHTML = "Seu horário máximo de sair para o intervalo será às "+
+        max_almoco+"<br>E você pode trabalhar no máximo mais "+falta_max_almoco+" nesse turno";
+
+
+    }else{
+        resultado_dia.innerHTML = "";
+        return;
     }
     
     
     
 }
 function quanto_falta(sair,almoco_volta){
-    cl(almoco_volta);
     var agora = new Date();
     var porcentagem;
     var resultado = [];
@@ -111,27 +127,40 @@ function quanto_falta(sair,almoco_volta){
     agora = agora.getHours() *60 + agora.getMinutes();
     sair = sair.split(":");
     sair = parseInt(sair[0]) *60 + parseInt(sair[1]);
-    //Contunar aqui -- arrumar pocentagem pra ir embora e fazer referente ao turno da tarde.
-    porcentagem = "50";
+    porcentagem = (agora-almoco_volta)*100/(sair-almoco_volta);
     if(porcentagem > 100){
         porcentagem = 100;
     }
     saida_minutos = (sair-agora)%60;
     if(saida_minutos<10){
-        saida_minutos = "0"+saida_minutos;
+        if (saida_minutos<0) {
+            saida_minutos = "00"
+        }else{
+            saida_minutos = "0"+saida_minutos;
+        }
     }
     saida_minutos = saida_minutos.toString();
     saida_minutos = saida_minutos.charAt(0)+saida_minutos.charAt(1);
     saida_horas = Math.floor((sair-agora)/60);
-    cl(saida_horas);
     if(saida_horas<10){
-        cl("saida_horas é menor que dez");
-        saida_horas = "0"+saida_horas;
+        if(saida_horas<0){
+            saida_horas = "00";
+        }else{
+            saida_horas = "0"+saida_horas;
+        }
     }
-    cl(saida_horas);
-    resultado[0] = porcentagem;
+    resultado[0] = Math.floor(porcentagem);
     resultado[1] =  saida_horas+":"+saida_minutos;
     return resultado;
+}
+function porcentagem(x,total){
+    var porcentagem;
+    x = x.split(":");
+    x = parseInt(x[0])*60 + parseInt(x[1]);
+    total = total.split(":");
+    total = parseInt(total[0])*60 + parseInt(total[1]);
+    porcentagem = Math.floor(x*100/total);
+    return porcentagem;
 }
 function diferenca(hora1, hora2) {
     var resultado;
@@ -261,7 +290,7 @@ function gerar_form(mes) {
     triggers();
 
 }
-function cl(string){
+function log(string){
     console.log(string);
 }
 //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);

@@ -4,7 +4,7 @@ body{
     font-size: 14px;
 }
 td:nth-child(3){
-    width: 400px;
+    width: 100px;
     /* background: blue; */
 }
 .relatorio-dia-container{
@@ -29,7 +29,7 @@ span{
     width:70px;
 }
 table{
-    width: 850px;
+    width: 550px;
     background: #000000;
     border: 1px solid black;
     border-radius: 5px;
