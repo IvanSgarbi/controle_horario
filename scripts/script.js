@@ -80,25 +80,24 @@ function relatorio(dia,semana) {
     var sair_hoje;
     var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0];
     var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0];
-    var turno_manha = diferenca(chegada,almoco_ida);
+    var turno_manha;
+    //RELATÓRIO DIA
     if(almoco_volta != "" && chegada != "" && saida != "" && almoco_ida != ""){
-
         turno_tarde = diferenca(almoco_volta,saida);
         resultado_dia.innerHTML = "Seu turno da tarde foi de "+ turno_tarde;
-
     }else if(chegada != "" && almoco_ida != "" && almoco_volta != ""){
-
+        turno_manha = diferenca(chegada,almoco_ida);
         sair = soma(almoco_volta,diferenca(turno_manha,"08:48"));
         sair_hoje = quanto_falta(sair,almoco_volta);
         resultado_dia.innerHTML = "Você pode sair as " + sair +"<br>E faltam "+sair_hoje[1]+
         " para vc poder sair<br>"+
         "<progress value="+sair_hoje[0]+" max=100></progress><br>Você já fez "+sair_hoje[0]+
         "% do seu turno da tarde";
-
     }else if(almoco_ida != "" && chegada != ""){
-        
-
-
+        var volta_almoco = soma(almoco_ida,"01:00");
+        turno_manha = diferenca(chegada,almoco_ida);        
+        resultado_dia.innerHTML = "Você trabalhou "+turno_manha+" horas no turno da manhã<br>"+
+        "E pode voltar "+volta_almoco+"<br>"
     }else if(chegada != ""){
         var agora = new Date();
         agora = agora.getHours()+":"+agora.getMinutes();
@@ -106,15 +105,26 @@ function relatorio(dia,semana) {
         var falta_max_almoco = diferenca(agora,max_almoco);
         resultado_dia.innerHTML = "Seu horário máximo de sair para o intervalo será às "+
         max_almoco+"<br>E você pode trabalhar no máximo mais "+falta_max_almoco+" nesse turno";
-
-
     }else{
         resultado_dia.innerHTML = "";
         return;
     }
+    //RELATÓRIO SEMANAL
+    //CONTINUAR DAQUI
+    for (cont = 0; cont < semana.length; cont++) {
+        a = semana[cont];
+        
+    }
     
     
-    
+}
+function total_dia(dia) {
+    var horario = dia.children[1].children;
+    var chegada = horario[0].value;
+    var almoco_ida = horario[1].value;
+    var almoco_volta = horario[2].value;
+    var saida = horario[3].value;
+
 }
 function quanto_falta(sair,almoco_volta){
     var agora = new Date();
@@ -293,4 +303,3 @@ function gerar_form(mes) {
 function log(string){
     console.log(string);
 }
-//var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
