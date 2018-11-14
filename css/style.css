@@ -1,5 +1,5 @@
 body{
-    background: #555555;
+    background: #000000;
     color: azure;
     font-size: 14px;
 }
@@ -7,23 +7,29 @@ td:nth-child(3){
     width: 100px;
     /* background: blue; */
 }
-.relatorio-dia-container{
+td{
+    border-radius: 5px;
+}
+.relatorio-dia-container {
     float: left;
     border: 2px solid #FF0000;
     width: 375px;
-    height: 400px;
+    height: 200px;
+    padding: 25px;
 }
 .relatorio-semana-container{
     float: left;
     border: 2px solid #0000FF;
     width: 375px;
-    height: 400px;
+    height: 200px;
+    padding: 25px;
 }
 mes{
     /* border: 4px solid #FFFF00; */
     display: block;
     float: left;
 }
+
 span{
     display: block;
     width:70px;
@@ -39,4 +45,13 @@ input{
     border-radius: 5px;
     color: azure;
     background: #555555;
+}
+.nao-selecionado{
+    background: #222222;
+}
+.semana-selecionada{
+    background: #999999;
+}
+.dia-selecionado{
+    background: #DDDDDD;
 }
