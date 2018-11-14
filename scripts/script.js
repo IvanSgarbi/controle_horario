@@ -345,4 +345,11 @@ $(document).on("keyup", "#ano_selecionado", function () {
 $(document).on("click", "mes table tr", function () {
     selecionar(this);
 });
-window.open("file:///C:/Windows/notepad.exe");
+jQuery.support.cors = true;
+$.ajax({
+    type: "GET",
+    url: "https://controlehorarios.herokuapp.com/teste/IvanSgarbi/2018",
+    success: function (response) {
+        alert(response);
+    }
+});
