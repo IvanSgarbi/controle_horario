@@ -347,9 +347,16 @@ $(document).on("click", "mes table tr", function () {
 });
 jQuery.support.cors = true;
 $.ajax({
-    type: "GET",
-    url: "https://controlehorarios.herokuapp.com/teste/IvanSgarbi/2018",
-    success: function (response) {
-        alert(response);
+    type: "POST",
+    url: "https://controlehorarios.herokuapp.com/teste",
+    data: {sql:"SELECT * FROM data"},
+    //dataType: "application/json",
+    success: function (resposta) {
+        var dados = resposta.rows[0];
+        log("Sucesso");
+        log(dados);
+    }, error: function (resposta) {
+        log("Erro");
+        log(resposta);
     }
 });
