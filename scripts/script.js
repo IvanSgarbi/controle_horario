@@ -4,7 +4,6 @@ $(document).ready(function () {
     gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
-    triggers();
 });
 
 function atualizar(horario) {
@@ -317,11 +316,21 @@ function gerar_form(mes) {
     }
     html += "</table>";
     $("mes").html(html);
-    triggers();
 
 }
-function triggers() {
-
+function salvar() {
+    var dadosExportar = { dias: [] };
+    var valores = document.querySelectorAll("input[type='time']");
+    var cont;
+    var dia_cont;
+    for (cont = 0; cont < valores.length; cont++) {
+        dia_cont = Math.floor(cont / 4);
+        if (!dadosExportar.dias[dia_cont]) {
+            dadosExportar.dias[dia_cont] = [];
+        }
+        dadosExportar.dias[dia_cont].push(valores[cont].value);
+    }
+    log(dadosExportar);
 }
 function log(string) {
     console.log(string);
@@ -345,6 +354,10 @@ $(document).on("keyup", "#ano_selecionado", function () {
 $(document).on("click", "mes table tr", function () {
     selecionar(this);
 });
+$(document).on("click", "#salvar", function () {
+    salvar();
+});
+/*
 jQuery.support.cors = true;
 $.ajax({
     type: "POST",
@@ -360,3 +373,4 @@ $.ajax({
         log(resposta);
     }
 });
+*/
