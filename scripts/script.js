@@ -360,7 +360,7 @@ function carregar(){
     var mes = $("#mes_selecionado").val();
     var ano = $("#ano_selecionado").val();
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "http://localhost:8080/carregar/"+ano+"/"+mes,
         //data: {sql:"SELECT * FROM data"},
         //dataType: "application/json",
@@ -368,11 +368,25 @@ function carregar(){
             //var dados = resposta.rows[0];
             log("Sucesso");
             log(resposta);
+            preencherCampos(resposta);
         }, error: function (resposta) {
             log("Erro");
             log(resposta);
         }
     });
+}
+function preencherCampos(string) {
+    var objetoDados = JSON.parse(string);
+    var arrayCampos = document.querySelectorAll("input[type='time']");
+    var cont,cont2,cont3=0;
+    for(cont=0;cont<objetoDados.dias.length; cont++){
+        for(cont2=0;cont2<4;cont2++){
+            log("Contadores: "+cont+","+cont2+","+cont3);
+            log(objetoDados.dias);
+            arrayCampos[cont3].value = objetoDados.dias[cont][cont2];
+            cont3++;
+        }
+    }
 }
 /*
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
