@@ -35,10 +35,6 @@ mes{
     float: left;
 }
 
-span{
-    display: block;
-    width:70px;
-}
 table{
     width: 550px;
     background: #000000;
@@ -59,4 +55,17 @@ input{
 }
 .dia-selecionado{
     background: #DDDDDD;
+}
+.topo{
+    width: 1000px;
+}
+#status > *{
+    display: inline;
+    align-self: auto;
+}
+#status{
+    height: 100%;
+    margin: 0em;
+    display: inline-block;
+    overflow: hidden;
 }

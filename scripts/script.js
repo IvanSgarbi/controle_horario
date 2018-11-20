@@ -4,7 +4,6 @@ $(document).ready(function () {
     gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
-    carregar();
 });
 
 function atualizar(horario) {
@@ -51,7 +50,7 @@ function selecionar(tr) {
     relatorio(tr, dias_selecionados);
 }
 function relatorio(dia, semana) {
-    log(semana);
+    //log(semana);
     var agora = new Date();
     agora = agora.getHours() + ":" + agora.getMinutes();
     var horario = dia.children[1].children;
@@ -107,12 +106,12 @@ function relatorio(dia, semana) {
     for (cont in semana) {
         dia_semana = semana[cont];
         if (dia_trabalhado(dia_semana)) {
-            log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
+            //log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
             horas_dia = total_dia(dia_semana);
             horas_semana = soma(horas_semana, horas_dia.total);
             extra_semana = soma(extra_semana, horas_dia.extra);
         } else {
-            log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
+            //log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
         }
     }
     resultado_semana.innerHTML =
@@ -318,12 +317,9 @@ function gerar_form(mes) {
     html += "</table>";
     $("mes").html(html);
 }
-/*
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-*/
+
 function salvar() {
+    salvando();
     var dadosExportar = { dias: [] };
     var valores = document.querySelectorAll("input[type='time']");
     var cont;
@@ -348,15 +344,16 @@ function salvarEmDisco(dados) {
         //dataType: "application/json",
         success: function (resposta) {
             //var dados = resposta.rows[0];
-            log("Sucesso");
+            log("Sucesso ao salvar");
             log(resposta);
         }, error: function (resposta) {
-            log("Erro");
+            log("Erro ao salvar");
             log(resposta);
         }
     });
 }
 function carregar(){
+    carregando();
     var mes = $("#mes_selecionado").val();
     var ano = $("#ano_selecionado").val();
     $.ajax({
@@ -366,11 +363,13 @@ function carregar(){
         //dataType: "application/json",
         success: function (resposta) {
             //var dados = resposta.rows[0];
-            log("Sucesso");
+            log("Sucesso ao Carregar");
             log(resposta);
-            preencherCampos(resposta);
+            if(resposta != "vazio"){
+                preencherCampos(resposta);
+            }
         }, error: function (resposta) {
-            log("Erro");
+            log("Erro ao carregar");
             log(resposta);
         }
     });
@@ -381,19 +380,21 @@ function preencherCampos(string) {
     var cont,cont2,cont3=0;
     for(cont=0;cont<objetoDados.dias.length; cont++){
         for(cont2=0;cont2<4;cont2++){
-            log("Contadores: "+cont+","+cont2+","+cont3);
-            log(objetoDados.dias);
             arrayCampos[cont3].value = objetoDados.dias[cont][cont2];
             cont3++;
         }
     }
+    limparLoading();
 }
-/*
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-*/
-
+function carregando() {
+    document.getElementById("status").innerHTML = "<img src='img/fastparrot.gif' width=30 /> Carregando...";
+}
+function salvando() {
+    document.getElementById("status").innerHTML = "<img src='img/fastparrot.gif' width=30 /> Salvando...";
+}
+function limparLoading() {
+    
+}
 function log(string) {
     console.log(string);
 }
@@ -419,20 +420,6 @@ $(document).on("click", "mes table tr", function () {
 $(document).on("click", "#salvar", function () {
     salvar();
 });
-/*
-jQuery.support.cors = true;
-$.ajax({
-    type: "POST",
-    url: "https://controlehorarios.herokuapp.com/carregar",
-    data: {sql:"SELECT * FROM data"},
-    //dataType: "application/json",
-    success: function (resposta) {
-        var dados = resposta.rows[0];
-        log("Sucesso");
-        log(dados);
-    }, error: function (resposta) {
-        log("Erro");
-        log(resposta);
-    }
+$(document).on("click", "#carregar", function () {
+    carregar();
 });
-*/
