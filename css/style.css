@@ -10,6 +10,11 @@ td:nth-child(3){
 td{
     border-radius: 5px;
 }
+.parrot{
+    clear: both;
+    margin: auto;
+    display: block;
+}
 .relatorio-dia-container {
     float: left;
     border: 2px solid #FF0000;

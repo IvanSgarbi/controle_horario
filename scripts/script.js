@@ -4,6 +4,7 @@ $(document).ready(function () {
     gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
+    carregar();
 });
 
 function atualizar(horario) {
@@ -316,8 +317,12 @@ function gerar_form(mes) {
     }
     html += "</table>";
     $("mes").html(html);
-
 }
+/*
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+*/
 function salvar() {
     var dadosExportar = { dias: [] };
     var valores = document.querySelectorAll("input[type='time']");
@@ -331,7 +336,50 @@ function salvar() {
         dadosExportar.dias[dia_cont].push(valores[cont].value);
     }
     log(dadosExportar);
+    salvarEmDisco(dadosExportar);
 }
+function salvarEmDisco(dados) {
+    var mes = $("#mes_selecionado").val();
+    var ano = $("#ano_selecionado").val();
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/salvar/"+ano+"/"+mes,
+        data: dados,
+        //dataType: "application/json",
+        success: function (resposta) {
+            //var dados = resposta.rows[0];
+            log("Sucesso");
+            log(resposta);
+        }, error: function (resposta) {
+            log("Erro");
+            log(resposta);
+        }
+    });
+}
+function carregar(){
+    var mes = $("#mes_selecionado").val();
+    var ano = $("#ano_selecionado").val();
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/carregar/"+ano+"/"+mes,
+        //data: {sql:"SELECT * FROM data"},
+        //dataType: "application/json",
+        success: function (resposta) {
+            //var dados = resposta.rows[0];
+            log("Sucesso");
+            log(resposta);
+        }, error: function (resposta) {
+            log("Erro");
+            log(resposta);
+        }
+    });
+}
+/*
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+*/
+
 function log(string) {
     console.log(string);
 }
@@ -361,7 +409,7 @@ $(document).on("click", "#salvar", function () {
 jQuery.support.cors = true;
 $.ajax({
     type: "POST",
-    url: "https://controlehorarios.herokuapp.com/teste",
+    url: "https://controlehorarios.herokuapp.com/carregar",
     data: {sql:"SELECT * FROM data"},
     //dataType: "application/json",
     success: function (resposta) {
