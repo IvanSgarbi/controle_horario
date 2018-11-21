@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>CONTROLE DE HORÁRIOS</title>
@@ -7,12 +8,13 @@
     <script src="scripts/jquery-3.3.1.min.js"></script>
     <script src="scripts/script.js"></script>
 </head>
+
 <body>
     <table align=center class="topo">
         <tr>
-            <td align=center>
+            <td width=40% class="forms">
                 Selecione o ano:
-                <input type="number" maxlength="4"  name="" id="ano_selecionado">
+                <input type="number" maxlength="4" name="" id="ano_selecionado">
                 Selecione o mês:
                 <select id="mes_selecionado">
                     <option value="0">Janeiro</option>
@@ -30,7 +32,13 @@
                 </select>
                 <button id="salvar">Salvar</button>
                 <button id="carregar">Carregar</button>
-                <span id="status"></span>
+
+            </td>
+            <td width=20%>
+                <span id="status" style="visibility:hidden">
+                    <img src='img/fastparrot.gif' width=30 />
+                    <span></span>
+                </span>
             </td>
         </tr>
     </table>
@@ -42,4 +50,5 @@
     <teste></teste>
     <img src="img/parrot.gif" width="50" class="parrot" alt="">
 </body>
+
 </html>

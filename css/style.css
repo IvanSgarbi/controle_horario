@@ -59,13 +59,13 @@ input{
 .topo{
     width: 1000px;
 }
-#status > *{
-    display: inline;
-    align-self: auto;
+.forms{
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
 }
-#status{
-    height: 100%;
-    margin: 0em;
-    display: inline-block;
-    overflow: hidden;
+.forms > *{
+    display: inline;
+    vertical-align: middle;
+    
 }

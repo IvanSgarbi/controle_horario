@@ -339,47 +339,50 @@ function salvarEmDisco(dados) {
     var ano = $("#ano_selecionado").val();
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/salvar/"+ano+"/"+mes,
+        url: "http://localhost:8080/salvar/" + ano + "/" + mes,
         data: dados,
         //dataType: "application/json",
         success: function (resposta) {
             //var dados = resposta.rows[0];
             log("Sucesso ao salvar");
             log(resposta);
+            limparLoading();
         }, error: function (resposta) {
             log("Erro ao salvar");
             log(resposta);
+            limparLoading();
         }
     });
 }
-function carregar(){
+function carregar() {
     carregando();
     var mes = $("#mes_selecionado").val();
     var ano = $("#ano_selecionado").val();
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/carregar/"+ano+"/"+mes,
+        url: "http://localhost:8080/carregar/" + ano + "/" + mes,
         //data: {sql:"SELECT * FROM data"},
         //dataType: "application/json",
         success: function (resposta) {
             //var dados = resposta.rows[0];
             log("Sucesso ao Carregar");
             log(resposta);
-            if(resposta != "vazio"){
+            if (resposta != "vazio") {
                 preencherCampos(resposta);
             }
         }, error: function (resposta) {
             log("Erro ao carregar");
             log(resposta);
+            limparLoading();
         }
     });
 }
 function preencherCampos(string) {
     var objetoDados = JSON.parse(string);
     var arrayCampos = document.querySelectorAll("input[type='time']");
-    var cont,cont2,cont3=0;
-    for(cont=0;cont<objetoDados.dias.length; cont++){
-        for(cont2=0;cont2<4;cont2++){
+    var cont, cont2, cont3 = 0;
+    for (cont = 0; cont < objetoDados.dias.length; cont++) {
+        for (cont2 = 0; cont2 < 4; cont2++) {
             arrayCampos[cont3].value = objetoDados.dias[cont][cont2];
             cont3++;
         }
@@ -387,13 +390,18 @@ function preencherCampos(string) {
     limparLoading();
 }
 function carregando() {
-    document.getElementById("status").innerHTML = "<img src='img/fastparrot.gif' width=30 /> Carregando...";
+    document.getElementById("status").style.visibility = "visible";
+    document.getElementById("status").children[1].innerHTML = "Carregando...";
 }
 function salvando() {
-    document.getElementById("status").innerHTML = "<img src='img/fastparrot.gif' width=30 /> Salvando...";
+    document.getElementById("status").style.visibility = "visible";
+    document.getElementById("status").children[1].innerHTML = "Salvando...";
 }
 function limparLoading() {
-    
+    var timer = setTimeout(function () {
+        document.getElementById("status").style.visibility = "hidden";
+        document.getElementById("status").children[1].innerHTML = "";
+    }, 1000);
 }
 function log(string) {
     console.log(string);
