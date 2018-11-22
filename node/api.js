@@ -20,6 +20,7 @@ app.get("/carregar/:ano/:mes", function (req, response) {
                 log("erro ao ler arquivo");
                 response.send("vazio");
             } else {
+                log("arquivo " + mes + "-" + ano + ".json lido com sucesso!");
                 response.send(dados);
             }
         });
@@ -34,8 +35,10 @@ app.post("/salvar/:ano/:mes", function (req, response) {
     var mes = req.params.mes;
     fs.writeFile("dados/" + mes + "-" + ano + ".json", JSON.stringify(dados), function (erro) {
         if (erro) {
+            log("erro ao gravar arquivo");
             resposta = "ERRO AO GRAVAR NO DISCO";
         } else {
+            log("arquivo " + mes + "-" + ano + ".json gravado com sucesso!");
             resposta = "Gravado com sucesso!";
         }
         response.send(resposta);
