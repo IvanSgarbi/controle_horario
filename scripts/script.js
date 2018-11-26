@@ -233,52 +233,24 @@ function soma(hora1, hora2) {
     return resultado;
 }
 function dias_no_mes(mes_num) {
-    var mes_dias;
-    mes_num = parseInt(mes_num);
-    switch (mes_num) {
-        case 0:
-            mes_dias = ["Janeiro", 31];
-            break;
-        case 1:
-            if ($("#ano_selecionado").val() % 4 == 0) {
-                mes_dias = ["Fevereiro", 29];
-            } else {
-                mes_dias = ["Fevereiro", 28];
-            }
-            break;
-        case 2:
-            mes_dias = ["Março", 31];
-            break;
-        case 3:
-            mes_dias = ["Abril", 30];
-            break;
-        case 4:
-            mes_dias = ["Maio", 31];
-            break;
-        case 5:
-            mes_dias = ["Junho", 30];
-            break;
-        case 6:
-            mes_dias = ["Julho", 31];
-            break;
-        case 7:
-            mes_dias = ["Agosto", 31];
-            break;
-        case 8:
-            mes_dias = ["Setembro", 30];
-            break;
-        case 9:
-            mes_dias = ["Outubro", 31];
-            break;
-        case 10:
-            mes_dias = ["Novembro", 30];
-            break;
-        case 11:
-            mes_dias = ["desembro", 31];
-            break;
-
-        default:
-            break;
+    mes_num = parseInt(mes_num);    
+    var meses = [
+        { mes: "Janeiro", dias: 31 },
+        { mes: "Fevereiro", dias: 28 },
+        { mes: "Março", dias: 31 },
+        { mes: "Abril", dias: 30 },
+        { mes: "Maio", dias: 31 },
+        { mes: "Junho", dias: 30 },
+        { mes: "Julho", dias: 31 },
+        { mes: "Agosto", dias: 31 },
+        { mes: "Setembro", dias: 30 },
+        { mes: "Outubro", dias: 31 },
+        { mes: "Novembro", dias: 30 },
+        { mes: "desembro", dias: 31 }
+    ];
+    var mes_dias = meses[mes_num];
+    if ($("#ano_selecionado").val() % 4 == 0 && mes_num == 1) {
+        mes_dias.dias = 29;
     }
     return mes_dias;
 }
@@ -291,7 +263,7 @@ function gerar_form(mes) {
     var dia_semana = new Date(ano, mes, 1);
     dia_semana = dia_semana.getDay();
     var dias = dias_no_mes(mes);
-    dias = dias[1];
+    dias = dias.dias;
     var cont;
     var html = "<table>";
     for (cont = 1; cont <= dias; cont++) {

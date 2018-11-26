@@ -10,6 +10,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //CAREGAR ----------
 app.get("/carregar/:ano/:mes", function (req, response) {
+    var tempo = new Date();
+    tempo = tempo.getDate()+"/"+(tempo.getMonth()+1)+"/"+tempo.getFullYear()+
+    " "+tempo.getHours()+":"+tempo.getMinutes()+":"+tempo.getSeconds()+","+
+    tempo.getMilliseconds();
     response.setHeader('Access-Control-Allow-Origin', '*');
     var ano = req.params.ano;
     var mes = req.params.mes;
@@ -20,7 +24,7 @@ app.get("/carregar/:ano/:mes", function (req, response) {
                 log("erro ao ler arquivo");
                 response.send("vazio");
             } else {
-                log("arquivo " + mes + "-" + ano + ".json lido com sucesso!");
+                log(tempo+"|| arquivo " + mes + "-" + ano + ".json lido com sucesso!");
                 response.send(dados);
             }
         });
@@ -28,6 +32,10 @@ app.get("/carregar/:ano/:mes", function (req, response) {
 });
 //SALVAR ----------
 app.post("/salvar/:ano/:mes", function (req, response) {
+    var tempo = new Date();
+    tempo = tempo.getDate()+"/"+(tempo.getMonth()+1)+"/"+tempo.getFullYear()+
+    " "+tempo.getHours()+":"+tempo.getMinutes()+":"+tempo.getSeconds()+","+
+    tempo.getMilliseconds();
     var resposta;
     response.setHeader('Access-Control-Allow-Origin', '*');
     var dados = req.body;
@@ -38,7 +46,7 @@ app.post("/salvar/:ano/:mes", function (req, response) {
             log("erro ao gravar arquivo");
             resposta = "ERRO AO GRAVAR NO DISCO";
         } else {
-            log("arquivo " + mes + "-" + ano + ".json gravado com sucesso!");
+            log(tempo+"|| arquivo " + mes + "-" + ano + ".json gravado com sucesso!");
             resposta = "Gravado com sucesso!";
         }
         response.send(resposta);
