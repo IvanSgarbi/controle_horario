@@ -124,10 +124,11 @@ function dia_trabalhado(dia) {
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
-    if (chegada == "" || almoco_ida == "" || almoco_volta == "" || saida == "") {
-        return false;
-    } else {
+    if ((chegada != "" || almoco_ida != "" || almoco_volta != "" || saida != "") ||
+        (chegada != "" || almoco_ida != "")) {
         return true;
+    } else {
+        return false;
     }
 }
 function total_dia(dia) {
@@ -136,8 +137,15 @@ function total_dia(dia) {
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
-    var horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida));
-    var extra = diferenca("08:48", horas_dia);
+    var extra;
+    var horas_dia;
+    if (almoco_volta == "" || saida == "") {
+        horas_dia = diferenca(chegada, almoco_ida);
+        extra = "00:00";
+    } else {
+        horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida));
+        extra = diferenca("08:48", horas_dia);
+    }
     return {
         total: horas_dia,
         extra: extra
@@ -233,7 +241,7 @@ function soma(hora1, hora2) {
     return resultado;
 }
 function dias_no_mes(mes_num) {
-    mes_num = parseInt(mes_num);    
+    mes_num = parseInt(mes_num);
     var meses = [
         { mes: "Janeiro", dias: 31 },
         { mes: "Fevereiro", dias: 28 },
