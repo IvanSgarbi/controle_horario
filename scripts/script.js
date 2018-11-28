@@ -92,12 +92,15 @@ function relatorio(dia, semana) {
         resultado_dia.innerHTML = "Você trabalhou " + turno_manha + " horas no turno da manhã<br>" +
             "E pode voltar " + volta_almoco + "<br>"
     } else if (chegada != "") {
+        var previsao = soma(chegada,"09:48");
         var agora = new Date();
         agora = agora.getHours() + ":" + agora.getMinutes();
         var max_almoco = soma(chegada, "06:00");
         var falta_max_almoco = diferenca(agora, max_almoco);
         resultado_dia.innerHTML = "Seu horário máximo de sair para o intervalo será às " +
-            max_almoco + "<br>E você pode trabalhar no máximo mais " + falta_max_almoco + " nesse turno";
+            max_almoco + "<br>Você pode trabalhar no máximo mais " + falta_max_almoco +
+            " nesse turno <br> Se fizer um Intervalo de exatamente uma hora poderá sair as "+
+            previsao;
     } else {
         resultado_dia.innerHTML = "";
 
@@ -106,12 +109,12 @@ function relatorio(dia, semana) {
     for (cont in semana) {
         dia_semana = semana[cont];
         if (dia_trabalhado(dia_semana)) {
-            //log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
+            log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
             horas_dia = total_dia(dia_semana);
             horas_semana = soma(horas_semana, horas_dia.total);
             extra_semana = soma(extra_semana, horas_dia.extra);
         } else {
-            //log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
+            log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
         }
     }
     resultado_semana.innerHTML =
@@ -124,8 +127,8 @@ function dia_trabalhado(dia) {
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
-    if ((chegada != "" || almoco_ida != "" || almoco_volta != "" || saida != "") ||
-        (chegada != "" || almoco_ida != "")) {
+    if ((chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") ||
+        (chegada != "" && almoco_ida != "")) {
         return true;
     } else {
         return false;
@@ -144,13 +147,18 @@ function total_dia(dia) {
         extra = "00:00";
     } else {
         horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida));
-        extra = diferenca("08:48", horas_dia);
+        if(maior( horas_dia,"08:48")){
+            extra = diferenca("08:48", horas_dia);
+        }else{
+            extra = "00:00";
+        }        
     }
     return {
         total: horas_dia,
         extra: extra
     }
 }
+
 function quanto_falta(sair, almoco_volta) {
     var agora = new Date();
     var porcentagem;
@@ -187,6 +195,17 @@ function quanto_falta(sair, almoco_volta) {
     resultado[0] = Math.floor(porcentagem);
     resultado[1] = saida_horas + ":" + saida_minutos;
     return resultado;
+}
+function maior(valor1,valor2){
+    valor1 = valor1.split(":");
+    valor2 = valor2.split(":");
+    valor1 = Number(valor1[0]) * 60 + Number(valor1[1]);
+    valor2 = Number(valor2[0]) * 60 + Number(valor2[1]);
+    if(valor1>valor2){
+        return true;
+    }else{
+        return false;
+    }
 }
 function porcentagem(x, total) {
     var porcentagem;
