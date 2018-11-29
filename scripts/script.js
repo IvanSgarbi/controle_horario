@@ -65,8 +65,8 @@ function relatorio(dia, semana) {
     var horas_semana = "00:00";
     var extra_semana = "00:00";
     var horas_dia;
-    var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0];
-    var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0];
+    var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0].children[1];
+    var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0].children[1];
     var turno_manha;
     //RELATÓRIO DIA
     if (almoco_volta != "" && chegada != "" && saida != "" && almoco_ida != "") {
