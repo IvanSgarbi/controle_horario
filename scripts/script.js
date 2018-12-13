@@ -135,6 +135,7 @@ function total_dia(dia) {
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
     var extra;
+    var dia_semana = dia.getAttribute("dia-semana");
     var horas_dia;
     if (almoco_volta == "" || saida == "") {
         horas_dia = diferenca(chegada, almoco_ida);
@@ -146,6 +147,9 @@ function total_dia(dia) {
         } else {
             extra = "00:00";
         }
+    }
+    if(dia_semana == 0 || dia_semana == 6){
+        extra = horas_dia;
     }
     return {
         total: horas_dia,
@@ -322,7 +326,7 @@ function gerar_form(mes) {
 }
 
 function salvar() {
-    salvando();
+    iconeSalvando();
     var dadosExportar = { dias: [] };
     var valores = document.querySelectorAll("input[type='time']");
     var cont;
@@ -358,7 +362,7 @@ function salvarEmDisco(dados) {
     });
 }
 function carregar() {
-    carregando();
+    iconeCarregando();
     var mes = $("#mes_selecionado").val();
     var ano = $("#ano_selecionado").val();
     $.ajax({
@@ -392,11 +396,11 @@ function preencherCampos(string) {
     }
     limparLoading();
 }
-function carregando() {
+function iconeCarregando() {
     document.getElementById("status").style.visibility = "visible";
     document.getElementById("status").children[1].innerHTML = "Carregando...";
 }
-function salvando() {
+function iconeSalvando() {
     document.getElementById("status").style.visibility = "visible";
     document.getElementById("status").children[1].innerHTML = "Salvando...";
 }
