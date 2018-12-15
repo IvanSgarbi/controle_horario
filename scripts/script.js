@@ -4,8 +4,8 @@ $(document).ready(function () {
     gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
+    console.log("teste");
 });
-
 function atualizar(horario) {
     var chegada = horario[0].value;
     var almoco_ida = horario[1].value;
@@ -308,10 +308,10 @@ function gerar_form(mes) {
             dias_semana_extenso[dia_semana] + " " + cont +
             ":</td>" +
             "<td>" +
-            "<input type=time>" +
-            "<input type=time>" +
-            "<input type=time>" +
-            "<input type=time>" +
+            "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
+            "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
+            "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
+            "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
             "</td>" +
             "<td>" +
             "</td>" +
@@ -328,7 +328,7 @@ function gerar_form(mes) {
 function salvar() {
     iconeSalvando();
     var dadosExportar = { dias: [] };
-    var valores = document.querySelectorAll("input[type='time']");
+    var valores = document.querySelectorAll(".time-input");
     var cont;
     var dia_cont;
     for (cont = 0; cont < valores.length; cont++) {
@@ -386,7 +386,7 @@ function carregar() {
 }
 function preencherCampos(string) {
     var objetoDados = JSON.parse(string);
-    var arrayCampos = document.querySelectorAll("input[type='time']");
+    var arrayCampos = document.querySelectorAll(".time-input");
     var cont, cont2, cont3 = 0;
     for (cont = 0; cont < objetoDados.dias.length; cont++) {
         for (cont2 = 0; cont2 < 4; cont2++) {
@@ -413,12 +413,76 @@ function limparLoading() {
 function log(string) {
     console.log(string);
 }
-$(document).on("change", "input[type='time']", function () {
-    var tr = this.parentElement.parentElement;
-    //atualizar(this.parentElement.children);
+function arruma_horas(input) {
+    var horas = input.value.substr(0, 2);
+    var resto = input.value.substr(2, input.value.length);
+    if (!isNaN(horas) && horas > 23) {
+        horas = 23;
+    }
+    input.value = horas + resto;
+}
+function arruma_minutos(input) {
+    if (input.value.length < 5) {
+        return;
+    }
+    var minutos = input.value.substr(3, 5);
+    var resto = input.value.substr(0, 3);
+    if (!isNaN(minutos) && minutos > 59) {
+        minutos = 59;
+    }
+    input.value = resto + minutos;
+}
+function arruma_pontos(input) {
+    var parte1 = input.value.substr(0, 2);
+    var parte2 = input.value.substr(2, input.value.length);
+    if (input.value.length > 2 && input.value.indexOf(":") < 0) {
+        input.value = parte1 + ":" + parte2;
+    }
+}
 
-    selecionar(tr);
+
+
+
+
+
+
+// $(document).on("change", "input[type='time']", function () {
+//     var tr = this.parentElement.parentElement;
+//     //atualizar(this.parentElement.children);
+
+//     selecionar(tr);
+// });
+$(document).on("keyup", ".time-input", function (event) {
+    
+    //verificar se as horas são maiores que 23
+    arruma_horas(this);
+    //verificar os minutos
+    arruma_minutos(this);
+    //coloca os dois pontos
+    arruma_pontos(this);
+    
 });
+$(document).on("change", ".time-input", function (event) {
+    //Verificar integridade das horas
+    var tr = this.parentElement.parentElement;;
+    var input = this;
+    selecionar(tr);
+    if (input.value.length < 5) {
+        input.value = "";
+        return;
+    } else {
+        var horario = input.value.split(":");
+        if (horario[0].length != horario[1].length) {
+            input.value = "";        
+            return;
+        }
+        
+    }
+});
+
+
+
+
 $(document).on("change", "#mes_selecionado", function () {
     gerar_form(this.value);
 });
