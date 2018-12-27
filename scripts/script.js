@@ -54,6 +54,9 @@ function relatorio(dia, semana) {
     var agora = new Date();
     agora = agora.getHours() + ":" + agora.getMinutes();
     var horario = dia.children[1].children;
+    var mes = document.querySelectorAll("mes tr");
+    var extra_mes = "00:00";
+    var horas_mes = "00:00";
     var chegada = horario[0].value;
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
@@ -63,6 +66,7 @@ function relatorio(dia, semana) {
     var extra_semana = "00:00";
     var resultado_dia = document.getElementsByClassName("relatorio-dia-container")[0].children[1];
     var resultado_semana = document.getElementsByClassName("relatorio-semana-container")[0].children[1];
+    var resultado_mes = document.getElementsByClassName("relatorio-mes-container")[0].children[1];
     //RELATÓRIO DIA
     if (almoco_volta != "" && chegada != "" && saida != "" && almoco_ida != "") {
         horas_dia = total_dia(dia);
@@ -111,9 +115,22 @@ function relatorio(dia, semana) {
             log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
         }
     }
+    //RELATóRIO DE HORAS EXTRAS MENSAL
+    for(cont=0;cont < mes.length;cont++){
+        if(dia_trabalhado(mes[cont])){
+            horas_dia = total_dia(mes[cont]);
+            horas_mes = soma(horas_mes,horas_dia.total);
+            extra_mes = soma(extra_mes,horas_dia.extra);
+        }
+    }
+
     resultado_semana.innerHTML =
         "Horas na semana " + horas_semana +
         "<br> Extras na semana: " + extra_semana;
+    resultado_mes.innerHTML = 
+    "<br> Horas no Mês: "+ horas_mes+
+    "<br> Extras no Mês: "+ extra_mes;
+        
 }
 function dia_trabalhado(dia) {
     var horario = dia.children[1].children;

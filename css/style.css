@@ -15,7 +15,7 @@ td{
     margin: auto;
     display: block;
 }
-.relatorio-dia-container, .relatorio-semana-container{
+.relatorio{
     float: left;
     border-radius: 35px;
     border: 2px solid black;
