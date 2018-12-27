@@ -83,21 +83,7 @@ app.post("/salvar/:ano/:mes", function (req, response) {
         response.send(resposta);
     });
 });
-//TESTE ---------------------------
-app.post("/teste", function (req, response) {
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    var dados = req.body;
-    log(typeof dados);
-    log(dados);
-    response.send(dados);
-    
-});
-app.options("/teste",function(req,response){
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Headers', '*');    
-    response.send();
-});
-//FIM DO TESTE ---------------------
+
 app.listen(port);
 function log(mensagem) {
     console.log(mensagem);
