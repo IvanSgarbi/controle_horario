@@ -1,9 +1,9 @@
 $(document).ready(function () {
     var dia_atual;
     dia_atual = new Date();
-    gerar_form(dia_atual.getMonth());
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
+    gerar_form(dia_atual.getMonth());
     console.log("teste");
 });
 function atualizar(horario) {
@@ -309,6 +309,8 @@ function dias_no_mes(mes_num) {
 function gerar_form(mes) {
     $("mes").html("Carregando...");
     var ano = $("#ano_selecionado").val();
+    log("Gerando tabela para:")
+    log("Ano: "+ano+" e mes: "+mes);
     var dias_semana_extenso =
         ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira",
             "Quinta-Feira", "Sexta-Feira", "Sábado"];
