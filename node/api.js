@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var fs = require('fs');
 app = express();
-port = process.env.PORT || 8080;
+port = process.env.PORT || 5800;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 log("teste");

@@ -24,7 +24,7 @@ function selecionar(tr) {
     var inicio_semana;
     var dias_selecionados = [];
     var cont = 0;
-    dia_semana = tr.getAttribute("dia-semana");
+    var dia_semana = tr.getAttribute("dia-semana");
     inicio_semana = dia_atual - dia_semana;
 
     $("tr").each(function (index, elemento) {
@@ -32,7 +32,6 @@ function selecionar(tr) {
         if (dia >= inicio_semana && dia <= inicio_semana + 6 && dia > 0) {
             dias_selecionados[cont] = elemento;
             cont++;
-            //dias_selecionados.push(elemento);
         }
     });
     cont = 0;
@@ -50,13 +49,13 @@ function selecionar(tr) {
     relatorio(tr, dias_selecionados);
 }
 function relatorio(dia, semana) {
-    //log(semana);
     var agora = new Date();
     agora = agora.getHours() + ":" + agora.getMinutes();
     var horario = dia.children[1].children;
     var mes = document.querySelectorAll("mes tr");
     var extra_mes = "00:00";
     var horas_mes = "00:00";
+    var devendo_mes = "00:00";
     var chegada = horario[0].value;
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
@@ -77,7 +76,7 @@ function relatorio(dia, semana) {
         turno_manha = diferenca(chegada, almoco_ida);
         sair = soma(almoco_volta, diferenca(turno_manha, "08:48"));
         sair_hoje = quanto_falta(sair, almoco_volta);
-        if (sair_hoje.horas == "00:00") {            
+        if (sair_hoje.horas == "00:00") {
             pode_sair = "VOCÊ JÁ PODE SAIR! E FEZ " + diferenca(sair, agora) + " HORAS EXTRAS HOJE!";
         }
         resultado_dia.innerHTML = "Você pode sair as " + sair + "<br>E faltam " + sair_hoje.horas +
@@ -91,7 +90,7 @@ function relatorio(dia, semana) {
             "E pode voltar " + volta_almoco + "<br>"
     } else if (chegada != "") {
         var previsao = soma(chegada, "09:48");
-        var agora = new Date();
+        agora = new Date();
         agora = agora.getHours() + ":" + agora.getMinutes();
         var max_almoco = soma(chegada, "06:00");
         var falta_max_almoco = diferenca(agora, max_almoco);
@@ -116,21 +115,28 @@ function relatorio(dia, semana) {
         }
     }
     //RELATóRIO DE HORAS EXTRAS MENSAL
-    for(cont=0;cont < mes.length;cont++){
-        if(dia_trabalhado(mes[cont])){
+    for (cont = 0; cont < mes.length; cont++) {
+        if (dia_trabalhado(mes[cont])) {
             horas_dia = total_dia(mes[cont]);
-            horas_mes = soma(horas_mes,horas_dia.total);
-            extra_mes = soma(extra_mes,horas_dia.extra);
+            horas_mes = soma(horas_mes, horas_dia.total);
+            extra_mes = soma(extra_mes, horas_dia.extra);
+            if (mes[cont].getAttribute("dia-semana") != "0" &&
+                mes[cont].getAttribute("dia-semana") != "6" &&
+                horas_dia.devendo != "00:00") {
+                devendo_mes = soma(devendo_mes, horas_dia.devendo);
+            }
         }
     }
 
     resultado_semana.innerHTML =
         "Horas na semana " + horas_semana +
         "<br> Extras na semana: " + extra_semana;
-    resultado_mes.innerHTML = 
-    "<br> Horas no Mês: "+ horas_mes+
-    "<br> Extras no Mês: "+ extra_mes;
-        
+    resultado_mes.innerHTML =
+        "<br> Horas no Mês: " + horas_mes +
+        "<br> Extras no Mês: " + extra_mes +
+        "<br> Devendo mês: " + devendo_mes +
+        "<br> Saldo de horas do mês: " + diferenca(devendo_mes,extra_mes);
+
 }
 function dia_trabalhado(dia) {
     var horario = dia.children[1].children;
@@ -138,12 +144,10 @@ function dia_trabalhado(dia) {
     var almoco_ida = horario[1].value;
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
-    if ((chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") ||
-        (chegada != "" && almoco_ida != "")) {
-        return true;
-    } else {
-        return false;
-    }
+
+    return ((chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") ||
+        (chegada != "" && almoco_ida != ""));
+
 }
 function total_dia(dia) {
     var horario = dia.children[1].children;
@@ -152,6 +156,7 @@ function total_dia(dia) {
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
     var extra;
+    var devendo = "00:00";
     var dia_semana = dia.getAttribute("dia-semana");
     var horas_dia;
     if (almoco_volta == "" || saida == "") {
@@ -162,15 +167,17 @@ function total_dia(dia) {
         if (maior(horas_dia, "08:48")) {
             extra = diferenca("08:48", horas_dia);
         } else {
+            devendo = soma(devendo, diferenca(horas_dia, "08:48"));
             extra = "00:00";
         }
     }
-    if(dia_semana == 0 || dia_semana == 6){
+    if (dia_semana == 0 || dia_semana == 6) {
         extra = horas_dia;
     }
     return {
         total: horas_dia,
-        extra: extra
+        extra: extra,
+        devendo: devendo
     }
 }
 
@@ -219,18 +226,14 @@ function maior(valor1, valor2) {
     valor2 = valor2.split(":");
     valor1 = Number(valor1[0]) * 60 + Number(valor1[1]);
     valor2 = Number(valor2[0]) * 60 + Number(valor2[1]);
-    if (valor1 > valor2) {
-        return true;
-    } else {
-        return false;
-    }
+    return (valor1 > valor2);
 }
 function dividir(hora, divisor) {
     hora = hora.split(":");
     divisor = Number(divisor);
     hora = Number(hora[0]) * 60 + Number(hora[1]);
-    var resultado_minutos = Math.floor(hora/divisor);
-    return Math.floor(resultado_minutos/60)+":"+resultado_minutos%60;
+    var resultado_minutos = Math.floor(hora / divisor);
+    return Math.floor(resultado_minutos / 60) + ":" + resultado_minutos % 60;
 }
 function porcentagem(x, total) {
     var porcentagem;
@@ -310,7 +313,7 @@ function gerar_form(mes) {
     $("mes").html("Carregando...");
     var ano = $("#ano_selecionado").val();
     log("Gerando tabela para:")
-    log("Ano: "+ano+" e mes: "+mes);
+    log("Ano: " + ano + " e mes: " + mes);
     var dias_semana_extenso =
         ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira",
             "Quinta-Feira", "Sexta-Feira", "Sábado"];
@@ -365,15 +368,14 @@ function salvarEmDisco(dados) {
     var ano = $("#ano_selecionado").val();
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/salvar/" + ano + "/" + mes,
+        url: "/salvar/" + ano + "/" + mes,
         data: dados,
-        //dataType: "application/json",
         success: function (resposta) {
-            //var dados = resposta.rows[0];
             log("Sucesso ao salvar");
             log(resposta);
             limparLoading();
-        }, error: function (resposta) {
+        },
+        error: function (resposta) {
             log("Erro ao salvar");
             log(resposta);
             limparLoading();
@@ -386,17 +388,15 @@ function carregar() {
     var ano = $("#ano_selecionado").val();
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/carregar/" + ano + "/" + mes,
-        //data: {sql:"SELECT * FROM data"},
-        //dataType: "application/json",
-        success: function (resposta) {
-            //var dados = resposta.rows[0];
+        url: "/carregar/" + ano + "/" + mes,
+        success: function (resposta) {            
             log("Sucesso ao Carregar");
             log(resposta);
             if (resposta != "vazio") {
                 preencherCampos(resposta);
             }
-        }, error: function (resposta) {
+        },
+        error: function (resposta) {
             log("Erro ao carregar");
             log(resposta);
             limparLoading();
@@ -428,6 +428,7 @@ function limparLoading() {
         document.getElementById("status").style.visibility = "hidden";
         document.getElementById("status").children[1].innerHTML = "";
     }, 1000);
+    log(timer.valueOf());
 }
 function log(string) {
     console.log(string);
@@ -458,32 +459,17 @@ function arruma_pontos(input) {
         input.value = parte1 + ":" + parte2;
     }
 }
-
-
-
-
-
-
-
-// $(document).on("change", "input[type='time']", function () {
-//     var tr = this.parentElement.parentElement;
-//     //atualizar(this.parentElement.children);
-
-//     selecionar(tr);
-// });
 $(document).on("keyup", ".time-input", function (event) {
-    
     //verificar se as horas são maiores que 23
     arruma_horas(this);
     //verificar os minutos
     arruma_minutos(this);
     //coloca os dois pontos
     arruma_pontos(this);
-    
 });
 $(document).on("change", ".time-input", function (event) {
     //Verificar integridade das horas
-    var tr = this.parentElement.parentElement;;
+    var tr = this.parentElement.parentElement;
     var input = this;
     selecionar(tr);
     if (input.value.length < 5) {
@@ -492,16 +478,11 @@ $(document).on("change", ".time-input", function (event) {
     } else {
         var horario = input.value.split(":");
         if (horario[0].length != horario[1].length) {
-            input.value = "";        
+            input.value = "";
             return;
         }
-        
     }
 });
-
-
-
-
 $(document).on("change", "#mes_selecionado", function () {
     gerar_form(this.value);
 });
