@@ -78,11 +78,23 @@ function relatorio(dia, semana) {
         sair_hoje = quanto_falta(sair, almoco_volta);
         if (sair_hoje.horas == "00:00") {
             pode_sair = "VOCÊ JÁ PODE SAIR! E FEZ " + diferenca(sair, agora) + " HORAS EXTRAS HOJE!";
+            var hora_extra_dia = diferenca(sair, agora).split(":");
+            hora_extra_dia = hora_extra_dia[0] * 60 + hora_extra_dia[1];
+            porcentagem_extra_dia = Math.floor(hora_extra_dia*100 / 72);
+
+            //BOTAR AQUI A BARRA DE HORAS EXTRAS
+            console.log(hora_extra_dia);
+            resultado_dia.innerHTML = pode_sair + "<br><progress class='progress-hora-extra' value=" + porcentagem_extra_dia +
+            " max=100></progress><br>" +
+            "Você ainda pode fazer " + diferenca(diferenca(sair, agora), "01:12") + " extras hoje!";
         }
-        resultado_dia.innerHTML = "Você pode sair as " + sair + "<br>E faltam " + sair_hoje.horas +
-            " para vc poder sair<br>" +
-            "<progress value=" + sair_hoje.porcentagem + " max=100></progress><br>Você já fez " + sair_hoje.porcentagem +
-            "% do seu turno da tarde<br>" + pode_sair;
+        else {
+            resultado_dia.innerHTML = "Você pode sair as " + sair + "<br>E faltam " + sair_hoje.horas +
+                " para vc poder sair<br>" +
+                "<progress value=" + sair_hoje.porcentagem + " max=100></progress><br>Você já fez " + sair_hoje.porcentagem +
+                "% do seu turno da tarde<br>";
+        }
+
     } else if (almoco_ida != "" && chegada != "") {
         var volta_almoco = soma(almoco_ida, "01:00");
         turno_manha = diferenca(chegada, almoco_ida);
@@ -98,6 +110,7 @@ function relatorio(dia, semana) {
             max_almoco + "<br>Você pode trabalhar no máximo mais " + falta_max_almoco +
             " nesse turno <br> Se fizer um Intervalo de exatamente uma hora poderá sair as " +
             previsao;
+        //BOTAR AQUI BARRA DO ALMOÇO
     } else {
         resultado_dia.innerHTML = "";
 
@@ -135,7 +148,7 @@ function relatorio(dia, semana) {
         "<br> Horas no Mês: " + horas_mes +
         "<br> Extras no Mês: " + extra_mes +
         "<br> Devendo mês: " + devendo_mes +
-        "<br> Saldo de horas do mês: " + diferenca(devendo_mes,extra_mes);
+        "<br> Saldo de horas do mês: " + diferenca(devendo_mes, extra_mes);
 
 }
 function dia_trabalhado(dia) {
@@ -389,7 +402,7 @@ function carregar() {
     $.ajax({
         type: "GET",
         url: "/carregar/" + ano + "/" + mes,
-        success: function (resposta) {            
+        success: function (resposta) {
             log("Sucesso ao Carregar");
             log(resposta);
             if (resposta != "vazio") {
