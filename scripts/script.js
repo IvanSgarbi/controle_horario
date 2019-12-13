@@ -74,6 +74,7 @@ function relatorio(dia, semana) {
     } else if (chegada != "" && almoco_ida != "" && almoco_volta != "") {
         var pode_sair = "";
         turno_manha = diferenca(chegada, almoco_ida);
+        horas_dia = total_dia(dia);
         sair = soma(almoco_volta, diferenca(turno_manha, "08:48"));
         sair_hoje = quanto_falta(sair, almoco_volta);
         if (sair_hoje.horas == "00:00") {
@@ -97,9 +98,11 @@ function relatorio(dia, semana) {
 
     } else if (almoco_ida != "" && chegada != "") {
         var volta_almoco = soma(almoco_ida, "01:00");
+        horas_dia = total_dia(dia);
         turno_manha = diferenca(chegada, almoco_ida);
         resultado_dia.innerHTML = "Você trabalhou " + turno_manha + " horas no turno da manhã<br>" +
-            "E pode voltar " + volta_almoco + "<br>"
+            "E pode voltar " + volta_almoco + "<br>";
+        
     } else if (chegada != "") {
         var previsao = soma(chegada, "09:48");
         agora = new Date();
@@ -174,6 +177,7 @@ function total_dia(dia) {
     var horas_dia;
     if (almoco_volta == "" || saida == "") {
         horas_dia = diferenca(chegada, almoco_ida);
+        devendo = soma(devendo, diferenca(horas_dia, "08:48"));
         extra = "00:00";
     } else {
         horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida));
