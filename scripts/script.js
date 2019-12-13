@@ -261,26 +261,41 @@ function porcentagem(x, total) {
     porcentagem = Math.floor(x * 100 / total);
     return porcentagem;
 }
-//devolve um intervalo de tempo, sendo hora1 menor que hora2
+//devolve um intervalo de tempo
 function diferenca(hora1, hora2) {
     var resultado;
     var minutos = 0;
     var horas = 0;
+    var negativo = false;
     hora1 = hora1.split(":");
     hora2 = hora2.split(":");
-    horas = hora2[0] * 1 - hora1[0] * 1;
-    minutos = hora2[1] * 1 - hora1[1] * 1;
-    if (minutos < 0) {
-        minutos = 60 - (minutos * -1);
-        horas--;
+
+    hora1 = hora1[0] * 60 + hora1[1] * 1;
+    hora2 = hora2[0] * 60 + hora2[1] * 1;
+
+    if(hora2 >= hora1){
+        horas = Math.floor((hora2 - hora1) / 60);
+        minutos = (hora2 - hora1) % 60;
+    }else{
+        negativo = true;
+        horas = Math.ceil((hora2 - hora1) / 60) * -1;
+        minutos = ((hora2 - hora1) % 60) * -1;
     }
+
     if (minutos < 10) {
         minutos = "0" + minutos;
     }
+
     if (horas < 10) {
         horas = "0" + horas;
     }
-    resultado = horas + ":" + minutos;
+
+    if(!negativo){
+        resultado = horas + ":" + minutos;
+    }else{
+        resultado = "-" + horas + ":" + minutos;
+    }
+    
     return resultado;
 }
 function soma(hora1, hora2) {
