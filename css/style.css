@@ -5,15 +5,34 @@ body{
 }
 td:nth-child(3){
     width: 100px;
-    /* background: blue; */
 }
 td{
     border-radius: 5px;
+}
+td.dia-semana{
+    width: 110px;
+}
+span.total-dia {
+    display: block;
+    float: right;
+    font-size: 16px;
+}
+td.grupo-time-input{
+    width: 340px;
 }
 .parrot{
     clear: both;
     margin: auto;
     display: block;
+}
+.footer{
+    color: black;
+    clear: both;
+    margin: auto;
+    display: block;
+    width: fit-content;
+    font-family: "Arial Black";
+    font-style: italic;
 }
 .relatorio{
     float: left;
@@ -57,7 +76,19 @@ input{
     background: #999999;
 }
 .dia-selecionado{
-    background: #DDDDDD;
+    background: #666666;
+}
+.saldo-dia{
+    display: block;
+    margin: auto;
+    font-size: 16px;
+    width: fit-content;
+}
+.positivo{
+    color: #00BB00;
+}
+.negativo{
+    color: #FF0000;
 }
 .topo{
     width: 1000px;

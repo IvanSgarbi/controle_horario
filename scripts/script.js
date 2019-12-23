@@ -1,3 +1,4 @@
+var selecionar_novamente = null;
 $(document).ready(function () {
     var dia_atual;
     dia_atual = new Date();
@@ -81,13 +82,13 @@ function relatorio(dia, semana) {
             pode_sair = "VOCÊ JÁ PODE SAIR! E FEZ " + diferenca(sair, agora) + " HORAS EXTRAS HOJE!";
             var hora_extra_dia = diferenca(sair, agora).split(":");
             hora_extra_dia = hora_extra_dia[0] * 60 + hora_extra_dia[1];
-            porcentagem_extra_dia = Math.floor(hora_extra_dia*100 / 72);
+            porcentagem_extra_dia = Math.floor(hora_extra_dia * 100 / 72);
 
             //BOTAR AQUI A BARRA DE HORAS EXTRAS
             console.log(hora_extra_dia);
             resultado_dia.innerHTML = pode_sair + "<br><progress class='progress-hora-extra' value=" + porcentagem_extra_dia +
-            " max=100></progress><br>" +
-            "Você ainda pode fazer " + diferenca(diferenca(sair, agora), "01:12") + " extras hoje!";
+                " max=100></progress><br>" +
+                "Você ainda pode fazer " + diferenca(diferenca(sair, agora), "01:12") + " extras hoje!";
         }
         else {
             resultado_dia.innerHTML = "Você pode sair as " + sair + "<br>E faltam " + sair_hoje.horas +
@@ -102,7 +103,7 @@ function relatorio(dia, semana) {
         turno_manha = diferenca(chegada, almoco_ida);
         resultado_dia.innerHTML = "Você trabalhou " + turno_manha + " horas no turno da manhã<br>" +
             "E pode voltar " + volta_almoco + "<br>";
-        
+
     } else if (chegada != "") {
         var previsao = soma(chegada, "09:48");
         agora = new Date();
@@ -122,12 +123,12 @@ function relatorio(dia, semana) {
     for (cont in semana) {
         dia_semana = semana[cont];
         if (dia_trabalhado(dia_semana)) {
-            log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
+            //log("Dia " + dia_semana.getAttribute("dia") + " Foi um dia trabalhado!");
             horas_dia = total_dia(dia_semana);
             horas_semana = soma(horas_semana, horas_dia.total);
             extra_semana = soma(extra_semana, horas_dia.extra);
         } else {
-            log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
+            //log("Dia " + dia_semana.getAttribute("dia") + " não foi um dia trabalhado!");
         }
     }
     //RELATóRIO DE HORAS EXTRAS MENSAL
@@ -273,10 +274,10 @@ function diferenca(hora1, hora2) {
     hora1 = hora1[0] * 60 + hora1[1] * 1;
     hora2 = hora2[0] * 60 + hora2[1] * 1;
 
-    if(hora2 >= hora1){
+    if (hora2 >= hora1) {
         horas = Math.floor((hora2 - hora1) / 60);
         minutos = (hora2 - hora1) % 60;
-    }else{
+    } else {
         negativo = true;
         horas = Math.ceil((hora2 - hora1) / 60) * -1;
         minutos = ((hora2 - hora1) % 60) * -1;
@@ -290,12 +291,12 @@ function diferenca(hora1, hora2) {
         horas = "0" + horas;
     }
 
-    if(!negativo){
+    if (!negativo) {
         resultado = horas + ":" + minutos;
-    }else{
+    } else {
         resultado = "-" + horas + ":" + minutos;
     }
-    
+
     return resultado;
 }
 function soma(hora1, hora2) {
@@ -358,16 +359,18 @@ function gerar_form(mes) {
     for (cont = 1; cont <= dias; cont++) {
         html +=
             "<tr class='nao-selecionado' dia=" + cont + " dia-semana=" + dia_semana + ">" +
-            "<td>" +
+            "<td class='dia-semana'>" +
             dias_semana_extenso[dia_semana] + " " + cont +
             ":</td>" +
-            "<td>" +
+            "<td class='grupo-time-input'>" +
             "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
             "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
             "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
             "<input class='time-input' type='text' placeholder=' - - : - - ' maxlength='5' width='20'>" +
+            "<span class='total-dia'></span>" +
             "</td>" +
             "<td>" +
+            "<span class='saldo-dia'></span>" +
             "</td>" +
             "</tr>";
         dia_semana++;
@@ -445,6 +448,7 @@ function preencherCampos(string) {
             cont3++;
         }
     }
+    calcularExtras();
     limparLoading();
 }
 function iconeCarregando() {
@@ -491,6 +495,32 @@ function arruma_pontos(input) {
         input.value = parte1 + ":" + parte2;
     }
 }
+function calcularExtras() {
+    log("chamou calcular Extras");
+    var dias = document.querySelectorAll("mes tr");
+    var total_horas = null;
+    var saldo_dia = null;
+
+    for (var cont = 0; cont < dias.length; cont++) {
+        total_horas = total_dia(dias[cont]).total;
+
+        if (dia_trabalhado(dias[cont])) {
+            dias[cont].querySelector("span.total-dia").innerHTML = total_horas;
+
+            saldo_dia = dias[cont].querySelector("span.saldo-dia");
+            saldo_dia.innerHTML = diferenca("08:48", total_horas);
+            saldo_dia.classList.remove("positivo");
+            saldo_dia.classList.remove("negativo");
+
+            if (saldo_dia.innerText.indexOf("-") == -1) {
+                saldo_dia.classList.add("positivo");
+            } else {
+                saldo_dia.classList.add("negativo");
+            }
+        }
+    }
+    log(dias);
+}
 $(document).on("keyup", ".time-input", function (event) {
     //verificar se as horas são maiores que 23
     arruma_horas(this);
@@ -526,7 +556,16 @@ $(document).on("keyup", "#ano_selecionado", function () {
     }
 });
 $(document).on("click", "mes table tr", function () {
-    selecionar(this);
+    var tr = this;
+    selecionar(tr);
+    if (selecionar_novamente) {
+        clearInterval(selecionar_novamente);
+        log("intervalo limpo");
+    }
+    selecionar_novamente = setInterval(function () {
+        selecionar(tr);
+        log("chamando seleção no loop.");
+    }, 30000);
 });
 $(document).on("click", "#salvar", function () {
     salvar();
