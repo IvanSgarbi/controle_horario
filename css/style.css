@@ -1,31 +1,38 @@
-body{
+body {
     background: linear-gradient(black, white);
     color: azure;
     font-size: 14px;
 }
-td:nth-child(3){
+
+td:nth-child(3) {
     width: 100px;
 }
-td{
+
+td {
     border-radius: 5px;
 }
-td.dia-semana{
+
+td.dia-semana {
     width: 110px;
 }
+
 span.total-dia {
     display: block;
     float: right;
     font-size: 16px;
 }
-td.grupo-time-input{
+
+td.grupo-time-input {
     width: 340px;
 }
-.parrot{
+
+.parrot {
     clear: both;
     margin: auto;
     display: block;
 }
-.footer{
+
+.footer {
     color: black;
     clear: both;
     margin: auto;
@@ -34,7 +41,8 @@ td.grupo-time-input{
     font-family: "Arial Black";
     font-style: italic;
 }
-.relatorio{
+
+.relatorio {
     float: left;
     border-radius: 35px;
     border: 2px solid black;
@@ -43,68 +51,84 @@ td.grupo-time-input{
     padding: 25px;
     background: #333333;
 }
-.relatorio > h1{
+
+.relatorio>h1 {
     text-align: center;
     display: block;
     margin: auto;
     clear: both;
     font-family: "Arial Black";
     color: #FFFFFF;
-    
 }
-mes{
+
+mes {
     display: block;
     float: left;
 }
 
-table{
+table {
     width: 550px;
     background: #000000;
     border: 1px solid black;
     border-radius: 5px;
 }
-input{
+
+input {
     border: 1px solid black;
     border-radius: 5px;
     color: azure;
     background: #555555;
 }
-.nao-selecionado{
+
+.nao-selecionado {
     background: #222222;
 }
-.semana-selecionada{
+
+.semana-selecionada {
     background: #999999;
 }
-.dia-selecionado{
+
+.dia-selecionado {
     background: #666666;
 }
-.saldo-dia{
+
+.saldo-dia {
     display: block;
     margin: auto;
     font-size: 16px;
     width: fit-content;
 }
-.positivo{
+
+.positivo {
     color: #00BB00;
 }
-.negativo{
+
+.negativo {
     color: #FF0000;
 }
-.topo{
+
+.topo {
     width: 1000px;
 }
-.forms{
+
+.forms {
     height: 40px;
     vertical-align: middle;
     text-align: center;
 }
-.forms > *{
+
+.forms>* {
     display: inline;
     vertical-align: middle;
-    
 }
-.time-input{
+
+.time-input {
     width: 60px;
     font-size: 16px;
     font-family: 'Times New Roman', Times, serif;
+}
+
+.feriado {
+    color: greenyellow;
+    background: red;
 }

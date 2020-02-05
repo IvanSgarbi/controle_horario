@@ -1,12 +1,85 @@
 var selecionar_novamente = null;
+var notificacao_disparada = false;
+var lista_notificacoes = [];
+var feriados = null;
 $(document).ready(function () {
     var dia_atual;
     dia_atual = new Date();
     $("#mes_selecionado").val(dia_atual.getMonth());
     $("#ano_selecionado").val(dia_atual.getFullYear());
     gerar_form(dia_atual.getMonth());
-    console.log("teste");
+    carregar();
+
+    setInterval(function () { atualizar_notificacoes() }, 5000);
 });
+
+/**AREA DAS NOTIFICAÇÕES!!!!!!!!!!!! */
+
+function permissao() {
+    if (!window.Notification) {
+        alert("Navegador sem suporte a notificações.");
+    } else if (Notification.permission == "denied") {
+        Notification.requestPermission();
+    }
+}
+
+function add_notificacao(hora, descricao) {
+    lista_notificacoes.push(
+        {
+            hora: hora,
+            descricao: descricao
+        }
+    );
+}
+
+function notificacao() {
+    var notificacao = new Notification("Título", {
+        icon: "img/parrot.gif",
+        body: "TESTE."
+    });
+    // notificacao.onclick = function () {
+    //     window.open("https://www.websparrow.org/spring/");
+    // };
+}
+
+function atualizar_notificacoes() {
+    var hoje = document.querySelector("tr[dia='" + new Date().getDate() + "']");
+    var agora = new Date().toLocaleTimeString().substring(0, 5);
+    var horario = hoje.children[1].children;
+    var chegada = horario[0].value;
+    var almoco_ida = horario[1].value;
+    var almoco_volta = horario[2].value;
+    var saida = horario[3].value;
+
+    lista_notificacoes = [];
+
+    if (chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") {
+
+    }
+
+    var container = $("relatorio-notificacoes-container p");
+    var conteudo = "";
+    conteudo += "<ul>";
+    for (let i = 0; i < lista_notificacoes.length; i++) {
+        conteudo += "<li>" + lista_notificacoes[i].hora + " / " + lista_notificacoes[i].descricao;
+    }
+    conteudo += "</ul>";
+    container.html(conteudo);
+}
+
+function index_notificacao(hora) {
+    for (var i = 0; i < lista_notificacoes.length; i++) {
+        if (lista_notificacoes[i].hora == hora) {
+            return i;
+        }
+    }
+}
+
+
+/**FIM DA AREA DAS NOTIFICAÇÕES!!!!! */
+
+
+
 function atualizar(horario) {
     var chegada = horario[0].value;
     var almoco_ida = horario[1].value;
@@ -20,6 +93,7 @@ function atualizar(horario) {
         $(resultado_dia).text(resultado);
     }
 }
+
 function selecionar(tr) {
     var dia_atual = tr.getAttribute("dia");
     var inicio_semana;
@@ -35,7 +109,6 @@ function selecionar(tr) {
             cont++;
         }
     });
-    cont = 0;
     $("tr").each(function (index, elemento) {
         elemento.classList.add("nao-selecionado");
         elemento.classList.remove("semana-selecionada");
@@ -49,6 +122,7 @@ function selecionar(tr) {
     tr.classList.add("dia-selecionado");
     relatorio(tr, dias_selecionados);
 }
+
 function relatorio(dia, semana) {
     var agora = new Date();
     agora = agora.getHours() + ":" + agora.getMinutes();
@@ -155,6 +229,7 @@ function relatorio(dia, semana) {
         "<br> Saldo de horas do mês: " + diferenca(devendo_mes, extra_mes);
 
 }
+
 function dia_trabalhado(dia) {
     var horario = dia.children[1].children;
     var chegada = horario[0].value;
@@ -164,8 +239,8 @@ function dia_trabalhado(dia) {
 
     return ((chegada != "" && almoco_ida != "" && almoco_volta != "" && saida != "") ||
         (chegada != "" && almoco_ida != ""));
-
 }
+
 function total_dia(dia) {
     var horario = dia.children[1].children;
     var chegada = horario[0].value;
@@ -173,13 +248,23 @@ function total_dia(dia) {
     var almoco_volta = horario[2].value;
     var saida = horario[3].value;
     var extra;
+    var agora = this.agora();
     var devendo = "00:00";
     var dia_semana = dia.getAttribute("dia-semana");
     var horas_dia;
-    if (almoco_volta == "" || saida == "") {
+    if (almoco_volta == "" && saida == "") {
         horas_dia = diferenca(chegada, almoco_ida);
         devendo = soma(devendo, diferenca(horas_dia, "08:48"));
         extra = "00:00";
+    }
+    else if (saida == "") {
+        horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, agora));
+        if (maior(horas_dia, "08:48")) {
+            extra = diferenca("08:48", horas_dia);
+        } else {
+            devendo = soma(devendo, diferenca(horas_dia, "08:48"));
+            extra = "00:00";
+        }
     } else {
         horas_dia = soma(diferenca(chegada, almoco_ida), diferenca(almoco_volta, saida));
         if (maior(horas_dia, "08:48")) {
@@ -239,6 +324,7 @@ function quanto_falta(sair, almoco_volta) {
     resultado.horas = saida_horas + ":" + saida_minutos;
     return resultado;
 }
+
 function maior(valor1, valor2) {
     valor1 = valor1.split(":");
     valor2 = valor2.split(":");
@@ -246,6 +332,7 @@ function maior(valor1, valor2) {
     valor2 = Number(valor2[0]) * 60 + Number(valor2[1]);
     return (valor1 > valor2);
 }
+
 function dividir(hora, divisor) {
     hora = hora.split(":");
     divisor = Number(divisor);
@@ -253,6 +340,7 @@ function dividir(hora, divisor) {
     var resultado_minutos = Math.floor(hora / divisor);
     return Math.floor(resultado_minutos / 60) + ":" + resultado_minutos % 60;
 }
+
 function porcentagem(x, total) {
     var porcentagem;
     x = x.split(":");
@@ -262,6 +350,7 @@ function porcentagem(x, total) {
     porcentagem = Math.floor(x * 100 / total);
     return porcentagem;
 }
+
 //devolve um intervalo de tempo
 function diferenca(hora1, hora2) {
     var resultado;
@@ -299,6 +388,7 @@ function diferenca(hora1, hora2) {
 
     return resultado;
 }
+
 function soma(hora1, hora2) {
     var resultado;
     var horas = 0;
@@ -320,6 +410,7 @@ function soma(hora1, hora2) {
     resultado = horas + ":" + minutos;
     return resultado;
 }
+
 function dias_no_mes(mes_num) {
     mes_num = parseInt(mes_num);
     var meses = [
@@ -342,6 +433,7 @@ function dias_no_mes(mes_num) {
     }
     return mes_dias;
 }
+
 function gerar_form(mes) {
     $("mes").html("Carregando...");
     var ano = $("#ano_selecionado").val();
@@ -398,6 +490,7 @@ function salvar() {
     log(dadosExportar);
     salvarEmDisco(dadosExportar);
 }
+
 function salvarEmDisco(dados) {
     var mes = $("#mes_selecionado").val();
     var ano = $("#ano_selecionado").val();
@@ -417,6 +510,7 @@ function salvarEmDisco(dados) {
         }
     });
 }
+
 function carregar() {
     iconeCarregando();
     var mes = $("#mes_selecionado").val();
@@ -438,7 +532,10 @@ function carregar() {
         }
     });
 }
+
 function preencherCampos(string) {
+    var mes = $("#mes_selecionado").val();
+    var ano = $("#ano_selecionado").val();
     var objetoDados = JSON.parse(string);
     var arrayCampos = document.querySelectorAll(".time-input");
     var cont, cont2, cont3 = 0;
@@ -448,35 +545,42 @@ function preencherCampos(string) {
             cont3++;
         }
     }
+    //feriados_mes(mes, ano);
     calcularExtras();
     limparLoading();
 }
+
 function iconeCarregando() {
     document.getElementById("status").style.visibility = "visible";
     document.getElementById("status").children[1].innerHTML = "Carregando...";
 }
+
 function iconeSalvando() {
     document.getElementById("status").style.visibility = "visible";
     document.getElementById("status").children[1].innerHTML = "Salvando...";
 }
+
 function limparLoading() {
     var timer = setTimeout(function () {
         document.getElementById("status").style.visibility = "hidden";
         document.getElementById("status").children[1].innerHTML = "";
     }, 1000);
-    log(timer.valueOf());
 }
+
 function log(string) {
     console.log(string);
 }
+
 function arruma_horas(input) {
     var horas = input.value.substr(0, 2);
     var resto = input.value.substr(2, input.value.length);
+
     if (!isNaN(horas) && horas > 23) {
         horas = 23;
     }
     input.value = horas + resto;
 }
+
 function arruma_minutos(input) {
     if (input.value.length < 5) {
         return;
@@ -488,6 +592,7 @@ function arruma_minutos(input) {
     }
     input.value = resto + minutos;
 }
+
 function arruma_pontos(input) {
     var parte1 = input.value.substr(0, 2);
     var parte2 = input.value.substr(2, input.value.length);
@@ -495,11 +600,13 @@ function arruma_pontos(input) {
         input.value = parte1 + ":" + parte2;
     }
 }
+
 function calcularExtras() {
     log("chamou calcular Extras");
     var dias = document.querySelectorAll("mes tr");
     var total_horas = null;
     var saldo_dia = null;
+    limparExtras();
 
     for (var cont = 0; cont < dias.length; cont++) {
         total_horas = total_dia(dias[cont]).total;
@@ -519,8 +626,23 @@ function calcularExtras() {
             }
         }
     }
-    log(dias);
+
+    obter_feriados_mes(
+        Number($("#mes_selecionado").val()) + 1,
+        $("#ano_selecionado").val()
+    );
 }
+
+function limparExtras() {
+    var limpar = document.querySelectorAll("span.saldo-dia, span.total-dia");
+    for (let cont = 0; cont < limpar.length; cont++) {
+        limpar[cont].innerHTML = "";
+    }
+}
+function agora(){
+    return new Date().toLocaleTimeString().substring(0, 5);
+}
+
 $(document).on("keyup", ".time-input", function (event) {
     //verificar se as horas são maiores que 23
     arruma_horas(this);
@@ -529,11 +651,13 @@ $(document).on("keyup", ".time-input", function (event) {
     //coloca os dois pontos
     arruma_pontos(this);
 });
+
 $(document).on("change", ".time-input", function (event) {
     //Verificar integridade das horas
     var tr = this.parentElement.parentElement;
     var input = this;
     selecionar(tr);
+    calcularExtras();
     if (input.value.length < 5) {
         input.value = "";
         return;
@@ -545,9 +669,11 @@ $(document).on("change", ".time-input", function (event) {
         }
     }
 });
+
 $(document).on("change", "#mes_selecionado", function () {
     gerar_form(this.value);
 });
+
 $(document).on("keyup", "#ano_selecionado", function () {
     var ano = $("#ano_selecionado").val();
     var mes = $("#mes_selecionado").val();
@@ -555,8 +681,10 @@ $(document).on("keyup", "#ano_selecionado", function () {
         gerar_form(mes);
     }
 });
+
 $(document).on("click", "mes table tr", function () {
     var tr = this;
+    calcularExtras();
     selecionar(tr);
     if (selecionar_novamente) {
         clearInterval(selecionar_novamente);
@@ -567,9 +695,11 @@ $(document).on("click", "mes table tr", function () {
         log("chamando seleção no loop.");
     }, 30000);
 });
+
 $(document).on("click", "#salvar", function () {
     salvar();
 });
+
 $(document).on("click", "#carregar", function () {
     carregar();
 });
